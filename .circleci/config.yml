@@ -5,10 +5,9 @@ jobs:
       - image: circleci/php:7.3-node-browsers
       - image: circleci/mysql:5.7
         environment:
-          MYSQL_DB: laravel-ci
+          MYSQL_DATABASE: laravel-ci
           MYSQL_USER: homestead
           MYSQL_PASSWORD: secret
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
     environment:
         APP_ENV: testing
         DB_CONNECTION: mysql
@@ -17,6 +16,7 @@ jobs:
         DB_DATABASE: laravel-ci
         DB_USERNAME: homestead
         DB_PASSWORD: secret
+        MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - checkout
       - restore_cache:
