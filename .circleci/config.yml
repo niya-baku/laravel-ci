@@ -3,6 +3,20 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.3-node-browsers
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DB: laravel-ci
+          MYSQL_USER: homestead
+          MYSQL_PASSWORD: secret
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+    environment:
+        APP_ENV: local
+        DB_CONNECTION: mysql
+        DB_HOST: mysql
+        DB_PORT: 3306
+        DB_DATABASE: laravel-ci
+        DB_USERNAME: homestead
+        DB_PASSWORD: secret
     steps:
       - checkout
       - restore_cache:
@@ -26,6 +40,13 @@ jobs:
           paths:
             - node_modules
       - run: npm run dev
+      - run:
+          name: get ready for mysql
+          command: |
+            sudo apt-get update
+            sudo apt-get install libpq-dev
+            sudo docker-php-ext-install pdo_mysql
+            dockerize -wait tcp://localhost:3306 -timeout 1m
       - run:
           name: php test
           command: vendor/bin/phpunit
